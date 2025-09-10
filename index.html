@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Repo Explorer</title>
+  <title>Wills Games site</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,15 +31,22 @@
     .active {
       display: block;
     }
+    a {
+      text-decoration: none;
+      color: #007acc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h1>My GitHub Pages Explorer</h1>
+  <h1>What will you play today?</h1>
   <p style="text-align:center">Click folders to expand. Click files to open.</p>
   <ul id="explorer"></ul>
 
   <script>
-    const repo = "SpeedyGuy1/your-repo"; // <-- change this
+    const repo = "SpeedyGuy1/speedyguy1.github.io"; // <-- your repo
     const apiBase = `https://api.github.com/repos/${repo}/contents/`;
 
     async function fetchDir(path = "") {
@@ -52,7 +59,6 @@
       const items = await fetchDir(path);
 
       items.sort((a, b) => {
-        // folders first, then files
         if (a.type !== b.type) return a.type === "dir" ? -1 : 1;
         return a.name.localeCompare(b.name);
       });
@@ -61,12 +67,14 @@
         if (item.name === "index.html") continue;
 
         const li = document.createElement("li");
-        li.textContent = item.name;
 
         if (item.type === "dir") {
           li.classList.add("folder");
+          li.textContent = item.name;
+
           const nested = document.createElement("ul");
           nested.classList.add("nested");
+
           li.onclick = async function (e) {
             e.stopPropagation();
             if (!nested.hasChildNodes()) {
@@ -74,14 +82,17 @@
             }
             nested.classList.toggle("active");
           };
+
           li.appendChild(nested);
-        } else if (item.name.endsWith(".html")) {
+        } 
+        else if (item.name.endsWith(".html")) {
           li.classList.add("file");
-          li.onclick = () => {
-            window.location.href = item.path;
-          };
+          const link = document.createElement("a");
+          link.href = "/" + item.path;
+          link.textContent = item.name.replace(".html", "");
+          li.appendChild(link);
         } else {
-          continue; // skip non-html files
+          continue;
         }
 
         container.appendChild(li);
