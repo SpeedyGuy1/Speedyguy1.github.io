@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Wills Games site</title>
+  <title>Repo Explorer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,15 +38,35 @@
     a:hover {
       text-decoration: underline;
     }
+    /* floating button */
+    #add-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007acc;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s;
+    }
+    #add-btn:hover {
+      background: #005fa3;
+    }
   </style>
 </head>
 <body>
-  <h1>What will you play today?</h1>
+  <h1>My GitHub Pages Explorer</h1>
   <p style="text-align:center">Click folders to expand. Click files to open.</p>
   <ul id="explorer"></ul>
 
+  <!-- floating button -->
+  <a href="add.html" id="add-btn">➕ Add your game</a>
+
   <script>
-    const repo = "SpeedyGuy1/speedyguy1.github.io"; // <-- your repo
+    const repo = "SpeedyGuy1/speedyguy1.github.io"; // your repo
     const apiBase = `https://api.github.com/repos/${repo}/contents/`;
 
     async function fetchDir(path = "") {
@@ -64,7 +84,8 @@
       });
 
       for (const item of items) {
-        if (item.name === "index.html") continue;
+        // skip index.html and add.html
+        if (item.name === "index.html" || item.name === "add.html") continue;
 
         const li = document.createElement("li");
 
