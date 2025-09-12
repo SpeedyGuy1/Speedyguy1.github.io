@@ -2,24 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Will's Games</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Will's Games</title> 
+  <title>Wills Games site</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -55,35 +38,15 @@
     a:hover {
       text-decoration: underline;
     }
-    /* floating button */
-    #add-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #007acc;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      transition: background 0.2s;
-    }
-    #add-btn:hover {
-      background: #005fa3;
-    }
   </style>
 </head>
 <body>
-  <h1>What will you play today?</h1> 
+  <h1>What will you play today?</h1>
   <p style="text-align:center">Click folders to expand. Click files to open.</p>
   <ul id="explorer"></ul>
 
-  <!-- floating button -->
-  <a href="https://forms.gle/atpRb7LSVMu6LPCQA" id="add-btn" target="_blank">➕ Add your game</a>
-
   <script>
-    const repo = "SpeedyGuy1/speedyguy1.github.io"; // your repo
+    const repo = "SpeedyGuy1/speedyguy1.github.io"; // <-- your repo
     const apiBase = `https://api.github.com/repos/${repo}/contents/`;
 
     async function fetchDir(path = "") {
@@ -101,8 +64,7 @@
       });
 
       for (const item of items) {
-        // skip index.html and add.html
-        if (item.name === "index.html" || item.name === "add.html") continue;
+        if (item.name === "index.html") continue;
 
         const li = document.createElement("li");
 
@@ -138,69 +100,6 @@
     }
 
     buildTree("", document.getElementById("explorer"));
-  </script>
-</body>
-</html>
-
-      margin: 8px 0;
-    }
-    a {
-      text-decoration: none;
-      color: #007acc;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .add-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #007acc;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      transition: background 0.2s;
-    }
-    .add-button:hover {
-      background: #005fa3;
-    }
-  </style>
-</head>
-<body>
-  <h1>What will you play today?</h1>
-  <ul id="file-list"></ul>
-
-  <a href="https://forms.gle/atpRb7LSVMu6LPCQA" class="add-button" target="_blank">
-    ➕ Add Your Game
-  </a>
-
-  <script>
-    async function fetchFiles() {
-      try {
-        const res = await fetch("https://api.github.com/repos/SpeedyGuy1/speedyguy1.github.io/contents/");
-        const files = await res.json();
-
-        const list = document.getElementById("file-list");
-        files.forEach(file => {
-          if (file.type === "file" && file.name.endsWith(".html")) {
-            if (file.name === "index.html" || file.name === "add.html") return; // skip these
-            const li = document.createElement("li");
-            const link = document.createElement("a");
-            link.href = file.name;
-            link.textContent = file.name.replace(".html", "");
-            li.appendChild(link);
-            list.appendChild(li);
-          }
-        });
-      } catch (err) {
-        console.error("Error fetching files:", err);
-      }
-    }
-
-    fetchFiles();
   </script>
 </body>
 </html>
