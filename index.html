@@ -5,139 +5,167 @@
   <title>Will's Games</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
+      font-family: sans-serif;
+      background-color: #222;
+      color: #eee;
       margin: 0;
-      padding: 0;
-    }
-    header {
       padding: 20px;
-      text-align: center;
-      background-color: #1f1f1f;
-      border-bottom: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
     h1 {
-      margin: 0;
-      font-size: 2.5em;
-      color: #ffcc00;
+      color: #ddd;
+      text-align: center;
+      margin-bottom: 10px;
     }
-    #uploadButton {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 15px;
+    p {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #aaa;
+    }
+    ul {
+      list-style: none;
+      padding-left: 20px;
+    }
+    li.folder {
+      cursor: pointer;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border: 1px solid #555;
       background-color: #333;
-      color: #ffcc00;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.2s;
+      border-radius: 5px;
+      transition: background-color 0.3s;
     }
-    #uploadButton:hover {
+    li.folder:hover {
       background-color: #444;
     }
-    #file-list {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
+    li.file {
+      padding: 8px 12px;
+      margin: 4px 0;
+      border: 1px solid #555;
+      background-color: #2a2a2a;
+      border-radius: 5px;
+      transition: background-color 0.3s;
     }
-    .folder {
-      margin: 10px 0;
+    li.file:hover {
+      background-color: #3a3a3a;
     }
-    .folder > span {
-      cursor: pointer;
-      font-weight: bold;
-      color: #ffcc00;
-      display: block;
-      padding: 5px 0;
-    }
-    .folder-contents {
-      margin-left: 20px;
-      display: none;
-    }
-    .folder.open > .folder-contents {
-      display: block;
-    }
-    .file-item {
-      margin: 5px 0;
-    }
-    .file-item a {
-      color: #61dafb;
+    li.file a {
       text-decoration: none;
+      color: #eee;
     }
-    .file-item a:hover {
+    li.file a:hover {
       text-decoration: underline;
     }
-    footer {
+    .nested {
+      display: none;
+      margin-left: 15px;
+    }
+    .active {
+      display: block;
+    }
+    .add-button {
+      display: block;
       text-align: center;
-      padding: 15px;
-      background-color: #1f1f1f;
-      border-top: 1px solid #333;
-      font-size: 0.9em;
-      color: #888;
+      margin: 20px auto;
+      padding: 10px 15px;
+      background-color: #333;
+      border: 1px solid #555;
+      border-radius: 5px;
+      color: #eee;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      width: fit-content;
+    }
+    .add-button:hover {
+      background-color: #444;
+    }
+    footer {
+      color: #777;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.8em;
+      margin-top: auto;
+    }
+    footer a {
+      color: #999;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Will's Games</h1>
-    <a id="uploadButton" href="https://github.com/SpeedyGuy1/speedyguy1.github.io/upload/main" target="_blank">+ Add your game</a>
-  </header>
-  
-  <div id="file-list">Loading games...</div>
-  
+  <h1>Will's Games</h1>
+  <p>Click folders to expand. Click files to open.</p>
+  <ul id="explorer"></ul>
+
+  <a href="https://forms.gle/atpRb7LSVMu6LPCQA" class="add-button" target="_blank">
+    ➕ Add Your Game
+  </a>
+
   <footer>
-    © 2025 Will's Games
+    Made by <a href="https://github.com/SpeedyGuy1">SpeedyGuy1</a>
   </footer>
 
   <script>
-    const repoOwner = "SpeedyGuy1";
-    const repoName = "speedyguy1.github.io";
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents`;
+    const repo = "SpeedyGuy1/speedyguy1.github.io";
+    const apiBase = `https://api.github.com/repos/${repo}/contents/`;
 
-    async function fetchFiles(path = "") {
-      const response = await fetch(`${apiUrl}/${path}`);
-      if (!response.ok) return [];
-      return response.json();
+    async function fetchDir(path = "") {
+      const res = await fetch(apiBase + path);
+      if (!res.ok) return [];
+      return res.json();
     }
 
-    async function displayFiles(path = "", container = document.getElementById("file-list")) {
-      const files = await fetchFiles(path);
+    async function buildTree(path = "", container) {
+      const items = await fetchDir(path);
 
-      container.innerHTML = "";
-      for (const file of files) {
-        if (file.type === "dir") {
-          const folderDiv = document.createElement("div");
-          folderDiv.className = "folder";
-          const folderTitle = document.createElement("span");
-          folderTitle.textContent = `📂 ${file.name}`;
-          folderDiv.appendChild(folderTitle);
+      items.sort((a, b) => {
+        if (a.type !== b.type) return a.type === "dir" ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      });
 
-          const folderContents = document.createElement("div");
-          folderContents.className = "folder-contents";
-          folderDiv.appendChild(folderContents);
+      for (const item of items) {
+        if (item.name === "index.html") continue;
 
-          folderTitle.onclick = () => {
-            folderDiv.classList.toggle("open");
-            if (folderDiv.classList.contains("open") && !folderContents.hasChildNodes()) {
-              displayFiles(file.path, folderContents);
+        const li = document.createElement("li");
+
+        if (item.type === "dir") {
+          li.classList.add("folder");
+          li.textContent = item.name;
+
+          const nested = document.createElement("ul");
+          nested.classList.add("nested");
+
+          li.onclick = async function (e) {
+            e.stopPropagation();
+            if (!nested.hasChildNodes()) {
+              await buildTree(item.path, nested);
             }
+            nested.classList.toggle("active");
           };
 
-          container.appendChild(folderDiv);
-        } else if (file.name.endsWith(".html")) {
-          const fileDiv = document.createElement("div");
-          fileDiv.className = "file-item";
+          li.appendChild(nested);
+        } 
+        else if (item.name.endsWith(".html")) {
+          li.classList.add("file");
           const link = document.createElement("a");
-          link.href = file.path;
-          link.textContent = file.name.replace(".html", "");
-          fileDiv.appendChild(link);
-          container.appendChild(fileDiv);
+          link.href = "/" + item.path;
+          link.textContent = item.name.replace(".html", "");
+          li.appendChild(link);
+        } else {
+          continue;
         }
+
+        container.appendChild(li);
       }
     }
 
-    displayFiles();
+    buildTree("", document.getElementById("explorer"));
   </script>
 </body>
 </html>
