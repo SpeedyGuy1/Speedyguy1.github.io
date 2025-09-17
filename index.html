@@ -2,99 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Physics Games</title>
-<style>
-  body {
-    font-family: sans-serif;
-    background-color: #222;
-    color: #eee;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  h1 {
-    color: #ddd;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #fileList {
-    max-width: 600px;
-    margin: 0 auto;
-    margin-bottom: 40px;
-  }
-  .project-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    margin-bottom: 10px;
-    border: 1px solid #555;
-    text-decoration: none;
-    color: #eee;
-    background-color: #333;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    position: relative;
-  }
-  .project-item:hover {
-    background-color: #444;
-  }
-  .project-item a {
-    color: #eee;
-    text-decoration: none;
-  }
-  .project-item a:hover {
-    text-decoration: underline;
-  }
-  .favorite {
-    background-color: #b8860b;
-    color: #222;
-  }
-  .project-item.favorite a {
-    color: #222;
-  }
-  .favorite-button {
-    background: none;
-    border: none;
-    color: #ccc;
-    cursor: pointer;
-    margin-left: auto;
-    font-size: 1.2em;
-    outline: none;
-    padding: 0;
-  }
-  .favorite-button.favorited {
-    color: gold;
-  }
-  .project-item a {
-    margin-right: auto;
-  }
-  footer {
-    color: #777;
-    text-align: center;
-    padding: 10px;
-    font-size: 0.8em;
-    margin-top: auto;
-  }
-  footer a {
-    color: #999;
-    text-decoration: none;
-  }
-  footer a:hover {
-    color: #ccc;
-  }
-</style>
+  <title>Projects</title>
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #222;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    h1 {
+      color: #ddd;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #explorer {
+      max-width: 700px;
+      margin: 0 auto;
+      margin-bottom: 40px;
+      padding-left: 0;
+      list-style: none;
+    }
+    .project-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      margin-bottom: 8px;
+      border: 1px solid #555;
+      text-decoration: none;
+      color: #eee;
+      background-color: #333;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .project-item:hover {
+      background-color: #444;
+    }
+    .project-item a {
+      color: inherit;
+      text-decoration: none;
+      margin-right: auto;
+    }
+    .project-item a:hover {
+      text-decoration: underline;
+    }
+    .favorite {
+      background-color: #b8860b;
+      color: #222;
+    }
+    .project-item.favorite a {
+      color: #222;
+    }
+    .favorite-button {
+      background: none;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+      margin-left: auto;
+      font-size: 1.2em;
+      outline: none;
+      padding: 0;
+    }
+    .favorite-button.favorited {
+      color: gold;
+    }
+    .folder {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 10px 15px;
+      border: 1px solid #555;
+      background-color: #2a2a2a;
+      border-radius: 5px;
+      margin-bottom: 6px;
+    }
+    .nested {
+      display: none;
+      margin-left: 20px;
+      padding-left: 0;
+      list-style: none;
+    }
+    .nested.active {
+      display: block;
+    }
+    footer {
+      color: #777;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.8em;
+      margin-top: auto;
+    }
+    footer a {
+      color: #999;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #ccc;
+    }
+    .add-button {
+      display: block;
+      width: max-content;
+      margin: 0 auto 30px;
+      padding: 10px 20px;
+      background-color: #444;
+      color: #eee;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    .add-button:hover {
+      background-color: #666;
+    }
+  </style>
 </head>
 <body>
-  <h1>What will you play today?</h1>
-  <p style="text-align:center">Click folders to expand. Click files to open.</p>
+  <h1>Projects</h1>
   <ul id="explorer"></ul>
 
+  <a href="https://forms.gle/atpRb7LSVMu6LPCQA" class="add-button" target="_blank">
+    ➕ Add Your Game
+  </a>
+
+  <footer>
+    Credit to <a href="https://scratch.mit.edu/users/speedyguy406/">@speedyguy406</a>
+  </footer>
+
   <script>
-    const repo = "SpeedyGuy1/speedyguy1.github.io"; // <-- your repo
+    const repo = "SpeedyGuy1/speedyguy1.github.io";
     const apiBase = `https://api.github.com/repos/${repo}/contents/`;
+
+    const favoriteKey = "favoriteProjects";
+    let favorites = JSON.parse(localStorage.getItem(favoriteKey)) || [];
 
     async function fetchDir(path = "") {
       const res = await fetch(apiBase + path);
@@ -117,39 +159,68 @@
 
         if (item.type === "dir") {
           li.classList.add("folder");
-          li.textContent = item.name;
+          li.textContent = "📁 " + item.name;
 
           const nested = document.createElement("ul");
           nested.classList.add("nested");
 
-          li.onclick = async function (e) {
+          li.addEventListener("click", async (e) => {
             e.stopPropagation();
             if (!nested.hasChildNodes()) {
               await buildTree(item.path, nested);
             }
             nested.classList.toggle("active");
-          };
+          });
 
-          li.appendChild(nested);
+          container.appendChild(li);
+          container.appendChild(nested);
         } 
         else if (item.name.endsWith(".html")) {
-          li.classList.add("file");
+          const projectId = path + "/" + item.name;
+
+          const div = document.createElement("div");
+          div.className = "project-item";
+          if (favorites.includes(projectId)) div.classList.add("favorite");
+
           const link = document.createElement("a");
           link.href = "/" + item.path;
           link.textContent = item.name.replace(".html", "");
-          li.appendChild(link);
-        } else {
-          continue;
-        }
 
-        container.appendChild(li);
+          const button = document.createElement("button");
+          button.className = "favorite-button";
+          if (favorites.includes(projectId)) {
+            button.classList.add("favorited");
+            button.textContent = "🌟";
+          } else {
+            button.textContent = "⭐";
+          }
+
+          button.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (favorites.includes(projectId)) {
+              favorites = favorites.filter(id => id !== projectId);
+            } else {
+              favorites.push(projectId);
+            }
+            localStorage.setItem(favoriteKey, JSON.stringify(favorites));
+            updateFavorites();
+          });
+
+          div.appendChild(link);
+          div.appendChild(button);
+          li.appendChild(div);
+          container.appendChild(li);
+        }
       }
     }
 
-    buildTree("", document.getElementById("explorer"));
+    function updateFavorites() {
+      document.getElementById("explorer").innerHTML = "";
+      buildTree("", document.getElementById("explorer"));
+    }
+
+    // Initial build
+    updateFavorites();
   </script>
-  <a href="https://forms.gle/atpRb7LSVMu6LPCQA" class="add-button" target="_blank">
-    ➕ Add Your Game
-  </a>
 </body>
 </html>
