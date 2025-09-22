@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tic Tac Toe with Difficulty</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dbeafe, #e0f7fa);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #2a5dab;
+      margin-bottom: 10px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-bottom: 20px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      color: #2a5dab;
+      background-color: white;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .status {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-bottom: 10px;
+    }
+
+    select, button {
+      padding: 8px 12px;
+      font-size: 1em;
+      margin: 5px;
+    }
+
+    .reset-button {
+      background-color: #4f90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .reset-button:hover {
+      background-color: #2563eb;
+    }
+
+    a {
+      margin-top: 20px;
+      color: #2a5dab;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎮 Tic Tac Toe</h1>
+
+  <div class="controls">
+    <label for="difficulty">Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <button class="reset-button" onclick="resetGame()">🔄 Reset</button>
+  </div>
+
+  <div class="status" id="status">Player X's turn</div>
+
+  <div class="board" id="board"></div>
+
+  <a href="games.html">🔙 Back to Game Zone</a>
+
+  <script>
+    const boardEl = document.getElementById('board');
+    const statusEl = document.getElementById('status');
+    const difficultySelect = document.getElementById('difficulty');
+
+    let board = Array(9).fill('');
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    function createBoard() {
+      boardEl.innerHTML = '';
+      board.forEach((cell, index) => {
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.dataset.index = index;
+        div.textContent = cell;
+        div.addEventListener('click', handleMove);
+        boardEl.appendChild(div);
+      });
+    }
+
+    function handleMove(e) {
+      const index = e.target.dataset.index;
+      if (!gameActive || board[index]) return;
+
+      board[index] = currentPlayer;
+      updateBoard();
+      if (checkWin(currentPlayer)) {
+        statusEl.textContent = `🎉 Player ${currentPlayer} wins!`;
+        gameActive = false;
+        return;
+      }
+
+      if (board.every(cell => cell !== '')) {
+        statusEl.textContent = "😮 It's a draw!";
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      statusEl.textContent = `Player ${currentPlayer}'s turn`;
+
+      if (currentPlayer === 'O') {
+        setTimeout(aiMove, 500);
+      }
+    }
+
+    function aiMove() {
+      if (!gameActive) return;
+      const difficulty = difficultySelect.value;
+      let index;
+
+      if (difficulty === 'easy') {
+        const empty = board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+        index = empty[Math.floor(Math.random() * empty.length)];
+      } else if (difficulty === 'medium') {
+        index = findBlockingMove() ?? randomMove();
+      } else {
+        index = minimax(board, 'O').index;
+      }
+
+      board[index] = 'O';
+      updateBoard();
+
+      if (checkWin('O')) {
+        statusEl.textContent = `😎 AI wins!`;
+        gameActive = false;
+        return;
+      }
+
+      if (board.every(cell => cell !== '')) {
+        statusEl.textContent = "😮 It's a draw!";
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = 'X';
+      statusEl.textContent = "Player X's turn";
+    }
+
+    function updateBoard() {
+      boardEl.childNodes.forEach((cell, i) => {
+        cell.textContent = board[i];
+      });
+    }
+
+    function checkWin(player) {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(pattern => pattern.every(i => board[i] === player));
+    }
+
+    function findBlockingMove() {
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === '') {
+          board[i] = 'X';
+          if (checkWin('X')) {
+            board[i] = '';
+            return i;
+          }
+          board[i] = '';
+        }
+      }
+      return null;
+    }
+
+    function randomMove() {
+      const empty = board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+      return empty[Math.floor(Math.random() * empty.length)];
+    }
+
+    function minimax(newBoard, player) {
+      const empty = newBoard.map((v, i) => v === '' ? i : null).filter(v => v !== null);
+
+      if (checkWin('X')) return { score: -10 };
+      if (checkWin('O')) return { score: 10 };
+      if (empty.length === 0) return { score: 0 };
+
+      const moves = [];
+
+      for (let i = 0; i < empty.length; i++) {
+        const move = {};
+        move.index = empty[i];
+        newBoard[empty[i]] = player;
+
+        if (player === 'O') {
+          move.score = minimax(newBoard, 'X').score;
+        } else {
+          move.score = minimax(newBoard, 'O').score;
+        }
+
+        newBoard[empty[i]] = '';
+        moves.push(move);
+      }
+
+      let bestMove;
+      if (player === 'O') {
+        let bestScore = -Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score > bestScore) {
+            bestScore = moves[i].score;
+            bestMove = moves[i];
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < moves.length; i++) {
+          if (moves[i].score < bestScore) {
+            bestScore = moves[i].score;
+            bestMove = moves[i];
+          }
+        }
+      }
+
+      return bestMove;
+    }
+
+    function resetGame() {
+      board = Array(9).fill('');
+      currentPlayer = 'X';
+      gameActive = true;
+      statusEl.textContent = "Player X's turn";
+      createBoard();
+    }
+
+    createBoard();
+  </script>
+
+</body>
+</html>

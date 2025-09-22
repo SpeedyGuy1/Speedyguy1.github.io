@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini ChatGPT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+      text-align: center;
+    }
+
+    #chatBox {
+      border: 1px solid #ccc;
+      background: #fff;
+      width: 80%;
+      margin: 0 auto 20px;
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      text-align: left;
+    }
+
+    input[type="text"] {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mini ChatGPT 🤖</h1>
+
+  <div id="chatBox"></div>
+
+  <input type="text" id="userInput" placeholder="Ask me something..." />
+  <button onclick="getBotResponse()">Send</button>
+
+  <br><br>
+  <a href="Main Page Timetable.html">🔙 Back to Timetable</a>
+
+  <script>
+const responses = {
+  "what is a computer?": "A computer is an electronic device that processes data according to instructions.",
+  "what is html?": "HTML tands for HyperText Markup Language. It structures content on the web.",
+  "what is css?": "CSS stands for Cascading Style Sheets. It styles HTML content.",
+  "what is javascript?": "JavaScript is a programming language used to make web pages interactive.",
+  "how does the internet work?": "The internet is a network of computers connected globally to share information.",
+  "what is the cpu?": "The CPU (Central Processing Unit) is the brain of the computer. It carries out instructions.",
+  "what is ram?": "RAM (Random Access Memory) is short-term memory that stores data the computer is actively using.",
+  "what is an ip address?": "An IP address is a unique number assigned to each device on a network to identify it.",
+  "what is a website?": "A website is a collection of related web pages accessed through a browser.",
+  "what is coding?": "Coding is writing instructions in a programming language to make computers do tasks.",
+  "what is a variable?": "A variable is a container that stores data values in programming.",
+  "what is a loop?": "A loop lets you repeat a block of code multiple times.",
+  "what is an algorithm?": "An algorithm is a step-by-step set of instructions to solve a problem.",
+  "what does http mean?": "HTTP stands for HyperText Transfer Protocol. It’s used to transfer web pages.",
+  "what is a browser?": "A browser is a program that lets you view websites (e.g., Chrome, Firefox).",
+  "what is a server?": "A server is a computer that provides data or services to other computers over a network.",
+  "what is cloud computing?": "Cloud computing means storing and accessing data over the internet instead of your own computer.",
+  "what is ai?": "AI stands for Artificial Intelligence. It’s when machines can mimic human thinking.",
+  "what is a chatbot?": "A chatbot is a computer program that simulates human conversation.",
+  "what is binary?": "Binary is a way of representing data using only 1s and 0s.",
+  "tell me a fun fact": "Did you know? The first computer programmer was Ada Lovelace in the 1800s!",
+  "who invented the computer?": "Charles Babbage is often called the father of the computer.",
+  "who invented the internet?": "The internet was developed by multiple people, but Vint Cerf and Bob Kahn are often credited.",
+  "Is Oliver smart?": "Fuck no...",
+};
+
+
+    function getBotResponse() {
+      const inputField = document.getElementById("userInput");
+      const userInput = inputField.value.toLowerCase().trim();
+      const chatBox = document.getElementById("chatBox");
+
+      if (userInput === "") return;
+
+      chatBox.innerHTML += `<div><strong>You:</strong> ${userInput}</div>`;
+
+      if (responses[userInput]) {
+        chatBox.innerHTML += `<div><strong>Bot:</strong> ${responses[userInput]}</div>`;
+      } else {
+        chatBox.innerHTML += `<div><strong>Bot:</strong> Hmm... I don't know that yet.</div>`;
+      }
+
+      inputField.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Enable pressing Enter to send the message
+    document.getElementById("userInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        getBotResponse();
+      }
+    });
+  </script>
+
+</body>
+</html>
