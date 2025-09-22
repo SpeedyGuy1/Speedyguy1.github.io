@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lemuel's School Timetable</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7fbff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2a5dab;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 95%;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    th {
+      background-color: #d8e9ff;
+    }
+
+    .time {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    .English { background-color: #bca0ff; }
+    .Math { background-color: #61b3ff; }
+    .Science { background-color: #ff6b81; }
+    .Humanities { background-color: #9be29b; }
+    .PE { background-color: #a5f2a5; }
+    .Music { background-color: #eaeaea; }
+    .Media { background-color: #ddd; }
+    .French { background-color: #000; color: white; }
+    .DT { background-color: #cccccc; }
+    .DigitalTech { background-color: #eeeeee; }
+    .ChristianEd { background-color: #f3f3f3; }
+    .Health { background-color: #fef3d3; }
+    .Free { background-color: #fff; }
+    .Form { background-color: #ff5c5c; color: white; }
+
+    td[class]:not(.time):not(.Free):not([colspan]) {
+      position: relative;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+
+    td[class]:not(.time):not(.Free):not([colspan])::before,
+    td[class]:not(.time):not(.Free):not([colspan])::after {
+      display: block;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    td[class]:not(.time):not(.Free):not([colspan])::before {
+      content: attr(data-subject);
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    td[class]:not(.time):not(.Free):not([colspan])::after {
+      content: attr(data-room);
+      transform: translateY(10px);
+      opacity: 0;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    td[class]:not(.time):not(.Free):not([colspan]):hover::before {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+
+    td[class]:not(.time):not(.Free):not([colspan]):hover::after {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    td.French::after {
+      color: white !important;
+    }
+
+    .link-cell {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .link-cell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.chat-container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f0f4ff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.chat-box {
+  height: 250px;
+  overflow-y: auto;
+  background: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>📚 Lemuel's School Timetable</h1>
+
+  <table>
+    <tr>
+      <th>Time</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+    </tr>
+
+    <tr>
+      <td class="time">08:30–09:20</td>
+      <td class="Humanities" data-subject="Humanities" data-room="4.13"></td>
+      <td class="French" data-subject="French" data-room="3.11"></td>
+      <td class="Form" data-subject="8 Harrier 1" data-room="2.02"></td>
+      <td class="French" data-subject="French" data-room="3.11">
+  <a href="french.html" class="link-cell"></a>
+</td>
+
+  <td class="ChristianEd" data-subject="Christian Ed" data-room="5.10">
+    <a href="bible.html" class="link-cell"></a> <!-- Added link for Christian Ed -->
+</tr>
+    </tr>
+
+    <tr>
+      <td class="time">09:20–10:10</td>
+      <td class="English" data-subject="English" data-room="2.11"></td>
+      <td class="Humanities" data-subject="Humanities" data-room="4.13"></td>
+      <td class="Math" data-subject="Math" data-room="1.05"></td>
+    <td class="Media" data-subject="Media" data-room="6.08">
+  <a href="media-news.html" class="link-cell"></a>
+</td>
+
+      <td class="English" data-subject="English" data-room="2.11"></td>
+    </tr>
+
+    <tr>
+      <td class="time">10:10–11:00</td>
+      <td class="Science" data-subject="Science" data-room="2.11"></td>
+      <td class="Science" data-subject="Science" data-room="2.09"></td>
+     <td class="Science" data-subject="Science" data-room="2.09">
+  <a href="periodic.html" class="link-cell"></a>
+</td>
+
+      <td class="Media" data-subject="Media Arts" data-room="6.08"></td>
+      <td class="Science" data-subject="Science" data-room="2.09"></td>
+    </tr>
+
+    <tr>
+      <td class="time">11:00–11:30</td>
+      <td colspan="5" class="Free">Recess</td>
+    </tr>
+
+    <tr>
+      <td class="time">11:30–12:15</td>
+     <td class="Music" data-subject="Music" data-room="6.10">
+  <a href="music.html" class="link-cell"></a>
+</td>
+
+      <td class="Math" data-subject="Math" data-room="1.05"></td>
+      <td class="PE" data-subject="PE" data-room=""></td>
+    <td class="Humanities" data-subject="Humanities" data-room="4.13">
+  <a href="worldmap.html" class="link-cell"></a>
+</td>
+
+      <td class="DT" data-subject="Design & Tech" data-room="4.21"></td>
+    </tr>
+
+    <tr>
+      <td class="time">12:15–13:05</td>
+      <td class="Music" data-subject="Music" data-room="6.10"></td>
+<td class="English" data-subject="English" data-room="2.11">
+  <a href="shakespeare.html" class="link-cell"></a>
+</td>
+
+      <td class="PE" data-subject="PE" data-room=""></td>
+      <td class="Math" data-subject="Math" data-room="1.05"></td>
+      <td class="DT" data-subject="Design & Tech" data-room="4.21"></td>
+    </tr>
+
+    <tr>
+      <td class="time">13:05–13:40</td>
+      <td colspan="5" class="Free">
+        <a href="games.html" style="text-decoration: none; color: inherit;">Lunch</a>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="time">13:40–14:25</td>
+      <td class="Health" data-subject="Health" data-room="4.02"></td>
+  <td class="DigitalTech" data-subject="Digital Tech" data-room="4.08">
+  <a href="chatgpt.html" target="_blank" class="link-cell"></a>
+</td>
+
+      <td class="Humanities" data-subject="Humanities" data-room="4.13"></td>
+      <td class="English" data-subject="English" data-room="2.11"></td>
+      <td class="Math" data-subject="Math" data-room="1.05"></td>
+    </tr>
+
+    <tr>
+      <td class="time">14:25–15:15</td>
+<td class="Math" data-subject="Math" data-room="1.05">
+  <a href="pi.html" class="link-cell"></a>
+</td>
+
+
+      </td>
+      <td class="DigitalTech" data-subject="Digital Tech" data-room="4.08"></td>
+<td class="English" data-subject="English" data-room="2.11"></td>
+      <td class="Science" data-subject="Science" data-room="2.09"></td>
+      <td class="Humanities" data-subject="Humanities" data-room="4.13"></td>
+    </tr>
+  </table>
+
+
+
+</script>
+
+
+</body>
+</html>
