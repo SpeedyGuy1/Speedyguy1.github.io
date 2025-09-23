@@ -1,3 +1,3 @@
+Version 1.0.2
 Todo:
-update homepage
-add more single file html games
+   - Add more single file html games
