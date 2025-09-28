@@ -60,24 +60,23 @@
       background-color: #2a2a2a;
       border-radius: 5px;
       transition: background-color 0.3s;
-      width: 300px;
+      width: 300px
       align-self: center;
-      margin-bottom: 10px;
     }
     li.file:hover {
-      text-align: center;
+      text-align: center
       background-color: #3a3a3a;
       width: 300px;
       align-self: center;
     }
-  li.file a {
-    text-align: center;
-    text-decoration: none;
-    color: #eee;
-    width: 300px;
-    align-self: center;
-    margin-bottom: 12px;
-  }
+    li.file a {
+      text-align: center;
+      text-decoration: none;
+      color: #eee;
+      width: 300px;
+      align-self: center;
+      margin-bottom: 12px;
+    }
     li.file a:hover {
       text-align: center;
       text-decoration: underline;
@@ -170,14 +169,14 @@
       for (const item of items) {
         if (item.name === "index.html") continue;
 
-      for (const item of items) {
-        if (item.name === "index.html" || item.name === "404.html") continue;
-
         const li = document.createElement("li");
 
         if (item.type === "dir") {
           li.classList.add("folder");
           li.textContent = item.name;
+
+          const nested = document.createElement("ul");
+          nested.classList.add("nested");
 
           li.onclick = async function (e) {
             e.stopPropagation();
