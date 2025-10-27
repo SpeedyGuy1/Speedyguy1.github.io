@@ -8,7 +8,7 @@ let total = 0;
 let currentCountry = "";
 let availableFlags = [];
 
-const allFlagsflags = [
+const allFlags = [
   { country: "Afghanistan", image: "https://flagcdn.com/w320/af.png" },
   { country: "Albania", image: "https://flagcdn.com/w320/al.png" },
   { country: "Algeria", image: "https://flagcdn.com/w320/dz.png" },
