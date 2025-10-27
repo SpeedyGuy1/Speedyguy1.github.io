@@ -8,8 +8,7 @@ let total = 0;
 let currentCountry = "";
 let availableFlags = [];
 
-// Master list of all flags (shortened here — use your full list)
-const flags = [
+const allFlagsflags = [
   { country: "Afghanistan", image: "https://flagcdn.com/w320/af.png" },
   { country: "Albania", image: "https://flagcdn.com/w320/al.png" },
   { country: "Algeria", image: "https://flagcdn.com/w320/dz.png" },
@@ -196,7 +195,8 @@ const flags = [
 ];
 
 
-// Fisher–Yates shuffle
+const totalFlags = allFlags.length;
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -205,20 +205,23 @@ function shuffle(array) {
   return array;
 }
 
-// Load a new flag
+function updateScoreDisplay() {
+  scoreElement.textContent = `Score: ${score} / ${total} | Flags Shown: ${total} / ${totalFlags}`;
+}
+
 function newFlag() {
   if (availableFlags.length === 0) {
-    availableFlags = shuffle([...allFlags]); // reshuffle when all shown
+    availableFlags = shuffle([...allFlags]);
   }
 
-  const randomFlag = availableFlags.pop(); // take one from the shuffled list
+  const randomFlag = availableFlags.pop();
   currentCountry = randomFlag.country;
   flagElement.src = randomFlag.image;
   guessInput.value = "";
   resultElement.textContent = "";
+  updateScoreDisplay();
 }
 
-// Handle guesses
 guessInput.addEventListener("keydown", event => {
   if (event.key === "Enter") {
     const userGuess = guessInput.value.trim().toLowerCase();
@@ -233,12 +236,10 @@ guessInput.addEventListener("keydown", event => {
       resultElement.className = "result wrong";
     }
 
-    scoreElement.textContent = `Score: ${score} / ${total}`;
-
+    updateScoreDisplay();
     setTimeout(newFlag, 1500);
   }
 });
 
-// Start
 availableFlags = shuffle([...allFlags]);
 newFlag();

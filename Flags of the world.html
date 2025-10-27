@@ -51,32 +51,12 @@
       font-weight: bold;
     }
 
-    .correct {
-      color: #00ff7f;
-    }
+    .correct { color: #00ff7f; }
+    .wrong { color: #ff6b6b; }
 
-    .wrong {
-      color: #ff6b6b;
-    }
-
-    .restart-container {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .restart-btn {
-      padding: 8px 16px;
+    #score {
+      margin-top: 10px;
       font-size: 16px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      align-self: center;
-    }
-
-    .restart-btn:hover {
-      background-color: #43a047;
     }
   </style>
 </head>
@@ -87,10 +67,10 @@
       <img id="flag" src="" alt="Flag" class="flag">
       <input id="guess" type="text" placeholder="Type the country name..." autofocus>
       <p id="result" class="result"></p>
-      <p id="score">Score: 0 / 182</p>
+      <p id="score">Score: 0 / 0 | Flags Shown: 0 / 182</p>
     </div>
   </div>
 
-  <script src="flags.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
