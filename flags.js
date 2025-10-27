@@ -6,9 +6,9 @@ const scoreElement = document.getElementById("score");
 let score = 0;
 let total = 0;
 let currentCountry = "";
+let availableFlags = [];
 
-// Add your flags here
-
+// Master list of all flags (shortened here — use your full list)
 const flags = [
   { country: "Afghanistan", image: "https://flagcdn.com/w320/af.png" },
   { country: "Albania", image: "https://flagcdn.com/w320/al.png" },
@@ -196,16 +196,29 @@ const flags = [
 ];
 
 
-// Pick a random flag
+// Fisher–Yates shuffle
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Load a new flag
 function newFlag() {
-  const randomFlag = flags[Math.floor(Math.random() * flags.length)];
+  if (availableFlags.length === 0) {
+    availableFlags = shuffle([...allFlags]); // reshuffle when all shown
+  }
+
+  const randomFlag = availableFlags.pop(); // take one from the shuffled list
   currentCountry = randomFlag.country;
   flagElement.src = randomFlag.image;
   guessInput.value = "";
   resultElement.textContent = "";
 }
 
-// Check the user's guess
+// Handle guesses
 guessInput.addEventListener("keydown", event => {
   if (event.key === "Enter") {
     const userGuess = guessInput.value.trim().toLowerCase();
@@ -226,5 +239,6 @@ guessInput.addEventListener("keydown", event => {
   }
 });
 
-// Start the quiz
+// Start
+availableFlags = shuffle([...allFlags]);
 newFlag();
