@@ -1,4 +1,4 @@
-const flagElement = document.getElementById("flag");
+const flagElement = document.getElementById("flagImage");
 const guessInput = document.getElementById("guess");
 const resultElement = document.getElementById("result");
 const scoreElement = document.getElementById("score");
@@ -216,7 +216,7 @@ function newFlag() {
 
   const randomFlag = availableFlags.pop();
   currentCountry = randomFlag.country;
-  flagElement.src = randomFlag.image;
+  flagImageElement.src = randomFlag.image;
   guessInput.value = "";
   resultElement.textContent = "";
   updateScoreDisplay();
