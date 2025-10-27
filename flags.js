@@ -216,7 +216,7 @@ function newFlag() {
 
   const randomFlag = availableFlags.pop();
   currentCountry = randomFlag.country;
-  flagImageElement.src = randomFlag.image;
+  flagElement.src = randomFlag.image; 
   guessInput.value = "";
   resultElement.textContent = "";
   updateScoreDisplay();
