@@ -182,7 +182,7 @@ const allFlags = [
   { country: "Ukraine", image: "https://flagcdn.com/w320/ua.png" },
   { country: "United Arab Emirates", image: "https://flagcdn.com/w320/ae.png" },
   { country: "United Kingdom", image: "https://flagcdn.com/w320/gb.png" },
-  { country: "United States", image: "https://flagcdn.com/w320/us.png" },
+  { country: "United States", image: "https://flagcdn.com/w320/us.png" , aliases ["us","United States of America", "USA"], }, 
   { country: "Uruguay", image: "https://flagcdn.com/w320/uy.png" },
   { country: "Uzbekistan", image: "https://flagcdn.com/w320/uz.png" },
   { country: "Vanuatu", image: "https://flagcdn.com/w320/vu.png" },
