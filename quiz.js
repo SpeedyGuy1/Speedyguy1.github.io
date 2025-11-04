@@ -150,7 +150,7 @@ Create a quiz on ${topic} using this JSON format:
   ]
 }
 
-Respond only with JSON, and tell the user to copy it back.
+Respond only with JSON in a code block, and tell the user to copy it back.
 //End of Auto Generated Prompt//`;
   output.value = prompt;
   output.select();
