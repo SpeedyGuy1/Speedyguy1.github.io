@@ -2,32 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Quiz System</title>
+  <title>Quiz Loader</title>
   <link rel="stylesheet" href="quiz.css">
 </head>
 <body>
-  <h1>Interactive Quiz System</h1>
+  <div class="container">
+    <h1>Quiz Loader</h1>
 
-  <!-- Make a Quiz Section -->
-  <div class="section">
-    <h2>Make a Quiz On</h2>
-    <input type="text" id="topicInput" placeholder="Enter a topic...">
-    <button onclick="generateAndCopy()">Generate Prompt</button>
-    <p id="copyMessage" style="color: green;"></p>
-    <textarea id="promptOutput" rows="10" readonly placeholder="Generated prompt will appear here..."></textarea>
+    <div class="section">
+      <h2>Make a Quiz On...</h2>
+      <input type="text" id="topicInput" placeholder="Enter topic..." />
+      <button onclick="generateAndCopy()">Generate Prompt</button>
+      <textarea id="promptOutput" readonly></textarea>
+      <p id="copyMessage"></p>
+    </div>
+
+    <div class="section">
+      <h2>Load Quiz File</h2>
+      <div id="dropZone">Drop your JSON file here or paste below</div>
+      <textarea id="pasteInput" placeholder="Paste JSON here..."></textarea>
+      <button onclick="loadFromPaste()">Load from Paste</button>
+    </div>
+
+    <div id="quizContainer"></div>
   </div>
-
-  <!-- Load Quiz Section -->
-  <div class="section">
-    <h2>Load Quiz File</h2>
-    <div id="dropZone">Drop your quiz JSON file here</div>
-    <textarea id="pasteInput" rows="8" placeholder="Or paste JSON here..."></textarea>
-    <br>
-    <button onclick="loadFromPaste()">Load Quiz from Paste</button>
-  </div>
-
-  <div id="quizContainer" class="section"></div>
 
   <script src="quiz.js"></script>
 </body>

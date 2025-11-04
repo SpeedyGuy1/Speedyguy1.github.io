@@ -20,11 +20,8 @@ dropZone.addEventListener('drop', (e) => {
       try {
         const parsed = JSON.parse(event.target.result);
         const questions = Array.isArray(parsed) ? parsed : parsed.Quiz;
-        if (Array.isArray(questions)) {
-          renderQuiz(questions);
-        } else {
-          alert('Invalid quiz format. Expected an array of questions.');
-        }
+        if (Array.isArray(questions)) renderQuiz(questions);
+        else alert('Invalid quiz format. Expected an array of questions.');
       } catch (err) {
         alert('Error reading JSON file: ' + err.message);
       }
@@ -40,11 +37,8 @@ function loadFromPaste() {
   try {
     const parsed = JSON.parse(input);
     const questions = Array.isArray(parsed) ? parsed : parsed.Quiz;
-    if (Array.isArray(questions)) {
-      renderQuiz(questions);
-    } else {
-      alert('Invalid quiz format. Expected an array of questions.');
-    }
+    if (Array.isArray(questions)) renderQuiz(questions);
+    else alert('Invalid quiz format. Expected an array of questions.');
   } catch (err) {
     alert('Error parsing pasted JSON: ' + err.message);
   }
@@ -59,11 +53,8 @@ function renderQuiz(questions) {
     const optionsDiv = document.createElement('div');
     optionsDiv.className = 'options';
 
-    // Text-answer type
     if (q.type === 'text') {
       optionsDiv.innerHTML = `<input type="text" id="q${index}_text" placeholder="Type your answer...">`;
-
-    // Multi-select type
     } else if (q.type === 'multiSelect' && q.options) {
       q.options.forEach((opt, i) => {
         const id = `q${index}_opt${i}`;
@@ -71,10 +62,8 @@ function renderQuiz(questions) {
           <label>
             <input type="checkbox" name="q${index}" value="${i}" id="${id}" />
             ${opt}
-          </label>`;
+          </label><br>`;
       });
-
-    // Single-select type
     } else if (q.options) {
       q.options.forEach((opt, i) => {
         const id = `q${index}_opt${i}`;
@@ -82,7 +71,7 @@ function renderQuiz(questions) {
           <label>
             <input type="radio" name="q${index}" value="${i}" id="${id}" />
             ${opt}
-          </label>`;
+          </label><br>`;
       });
     }
 
@@ -99,8 +88,7 @@ function renderQuiz(questions) {
 
 function showResults(questions) {
   let score = 0;
-  const resultsDivs = document.querySelectorAll('.result');
-  resultsDivs.forEach(div => div.remove());
+  document.querySelectorAll('.result').forEach(div => div.remove());
 
   questions.forEach((q, index) => {
     const resultDiv = document.createElement('div');
@@ -118,20 +106,15 @@ function showResults(questions) {
       }
 
     } else if (q.type === 'multiSelect') {
-      const selected = Array.from(document.querySelectorAll(`input[name="q${index}"]:checked`))
-        .map(i => parseInt(i.value));
+      const selected = [...document.querySelectorAll(`input[name="q${index}"]:checked`)].map(i => parseInt(i.value));
       const correctSet = new Set(q.answer);
-      const selectedSet = new Set(selected);
-
-      const isCorrect = selectedSet.size === correctSet.size &&
-        [...selectedSet].every(v => correctSet.has(v));
-
+      const userSet = new Set(selected);
+      const isCorrect = correctSet.size === userSet.size && [...correctSet].every(a => userSet.has(a));
       if (isCorrect) {
         score++;
         resultDiv.textContent = `Q${index + 1}: ✅ Correct! ${q.explanation}`;
       } else {
-        const correctLabels = q.answer.map(i => q.options[i]).join(', ');
-        resultDiv.textContent = `Q${index + 1}: ❌ Incorrect. Correct answers: ${correctLabels}. ${q.explanation}`;
+        resultDiv.textContent = `Q${index + 1}: ❌ Incorrect. Correct: ${q.answer.map(i => q.options[i]).join(', ')}. ${q.explanation}`;
       }
 
     } else {
@@ -177,10 +160,10 @@ Create a quiz on ${topic} using this JSON format (with more questions):
     },
     {
       "type": "multiSelect",
-      "question": "Select all correct answers",
-      "options": ["A", "B", "C", "D"],
-      "answer": [1, 3],
-      "explanation": "Explain why multiple options are correct."
+      "question": "Multi-select question here",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": [correctIndices],
+      "explanation": "Brief explanation of the correct answers."
     },
     {
       "type": "text",
