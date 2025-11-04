@@ -59,8 +59,22 @@ function renderQuiz(questions) {
     const optionsDiv = document.createElement('div');
     optionsDiv.className = 'options';
 
+    // Text-answer type
     if (q.type === 'text') {
       optionsDiv.innerHTML = `<input type="text" id="q${index}_text" placeholder="Type your answer...">`;
+
+    // Multi-select type
+    } else if (q.type === 'multiSelect' && q.options) {
+      q.options.forEach((opt, i) => {
+        const id = `q${index}_opt${i}`;
+        optionsDiv.innerHTML += `
+          <label>
+            <input type="checkbox" name="q${index}" value="${i}" id="${id}" />
+            ${opt}
+          </label>`;
+      });
+
+    // Single-select type
     } else if (q.options) {
       q.options.forEach((opt, i) => {
         const id = `q${index}_opt${i}`;
@@ -102,6 +116,24 @@ function showResults(questions) {
       } else {
         resultDiv.textContent = `Q${index + 1}: ❌ Incorrect. (${q.answer.join(', ')}) ${q.explanation}`;
       }
+
+    } else if (q.type === 'multiSelect') {
+      const selected = Array.from(document.querySelectorAll(`input[name="q${index}"]:checked`))
+        .map(i => parseInt(i.value));
+      const correctSet = new Set(q.answer);
+      const selectedSet = new Set(selected);
+
+      const isCorrect = selectedSet.size === correctSet.size &&
+        [...selectedSet].every(v => correctSet.has(v));
+
+      if (isCorrect) {
+        score++;
+        resultDiv.textContent = `Q${index + 1}: ✅ Correct! ${q.explanation}`;
+      } else {
+        const correctLabels = q.answer.map(i => q.options[i]).join(', ');
+        resultDiv.textContent = `Q${index + 1}: ❌ Incorrect. Correct answers: ${correctLabels}. ${q.explanation}`;
+      }
+
     } else {
       const selected = document.querySelector(`input[name="q${index}"]:checked`);
       if (selected && parseInt(selected.value) === q.answer[0]) {
@@ -111,6 +143,7 @@ function showResults(questions) {
         resultDiv.textContent = `Q${index + 1}: ❌ Incorrect. ${q.explanation}`;
       }
     }
+
     quizContainer.appendChild(resultDiv);
   });
 
@@ -129,6 +162,7 @@ function generateAndCopy() {
     message.textContent = '';
     return;
   }
+
   const prompt = `//Auto Generated Prompt//
 Create a quiz on ${topic} using this JSON format (with more questions):
 
@@ -142,6 +176,13 @@ Create a quiz on ${topic} using this JSON format (with more questions):
       "explanation": "Brief explanation of the correct answer."
     },
     {
+      "type": "multiSelect",
+      "question": "Select all correct answers",
+      "options": ["A", "B", "C", "D"],
+      "answer": [1, 3],
+      "explanation": "Explain why multiple options are correct."
+    },
+    {
       "type": "text",
       "question": "Text-answer question here",
       "answer": ["word1", "word2"], 
@@ -152,6 +193,7 @@ Create a quiz on ${topic} using this JSON format (with more questions):
 
 Respond only with JSON in a code block, and tell the user to copy it back.
 //End of Auto Generated Prompt//`;
+
   output.value = prompt;
   output.select();
   document.execCommand('copy');
