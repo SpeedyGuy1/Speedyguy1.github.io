@@ -130,7 +130,7 @@ function generateAndCopy() {
     return;
   }
   const prompt = `//Auto Generated Prompt//
-Create a quiz on ${topic} using this JSON format:
+Create a quiz on ${topic} using this JSON format (with more questions):
 
 {
   "Quiz": [
